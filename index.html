@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Interactive Map : Lake Tahoe Crystal Bay </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+  integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+  crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+  integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+  crossorigin=""></script>
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+</head>
+<body>
+<style>
+#map {
+position: absolute;
+z-index: 0;
+background-color: #ffffff00;
+height: 600px;
+width: 1050px;
+}
+ .leaflet-container svg {
+    max-width: none;
+}
+
+
+
+
+
+</style>
+
+    <div id="map" class="map"></div>
+
+
+
+
+
+
+
+<script></script>
+
+<script>
+
+
+  var map = L.map('map',{
+                        center:[39.248, -119.963],
+                        zoom:13,
+                        minZoom:1,
+                        maxZoom:15
+                    });
+
+
+
+var earth = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{
+	
+}).addTo(map);
+    
+var street = L.tileLayer('https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=u558p2Vd23c6nHNHTSXF');
+
+
+
+$.getJSON("data/lake.geojson",function(lake){
+// add GeoJSON layer to the map once the file is loaded
+var datalayer = L.geoJson(lake ,{
+
+style: {
+	"zIndexOffset": 5,
+    "color": "blue",
+    "weight": 0.5,
+    "opacity": 0.5,
+	"fillOpacity": 0.2
+},
+
+
+onEachFeature: function(feature, featureLayer) {
+featureLayer.bindPopup(feature.properties.names);
+}
+}).setZIndex(4).addTo(map).bringToBack();
+});
+
+
+
+
+
+$.getJSON("data/lareas.geojson",function(la){
+// add GeoJSON layer to the map once the file is loaded
+var datalayer = L.geoJson(la ,{
+
+style: {
+	"zIndexOffset": 5,
+    "color": "black",
+    "weight": 0.6,
+    "opacity": 1,
+	"fillOpacity": 0.2
+},
+
+
+onEachFeature: function(feature, featureLayer) {
+featureLayer.bindPopup(feature.properties.Place_Name);
+}
+}).setZIndex(4).addTo(map).bringToBack();
+});
+
+
+
+$.getJSON("data/roads.geojson",function(road){
+// add GeoJSON layer to the map once the file is loaded
+var datalayer = L.geoJson(road ,{
+
+style: {
+	"zIndexOffset": 5,
+    "color": "red",
+    "weight": 1,
+    "opacity": 1,
+	"fillOpacity": 0.2
+},
+
+
+onEachFeature: function(feature, featureLayer) {
+featureLayer.bindPopup(feature.properties.names);
+}
+}).setZIndex(4).addTo(map).bringToBack();
+});
+
+
+$.getJSON("data/boundary.geojson",function(boundary){
+// add GeoJSON layer to the map once the file is loaded
+var datalayer = L.geoJson(boundary ,{
+
+style: {
+	"zIndexOffset": 5,
+    "color": "lightyellow",
+    "weight": 0.6,
+    "opacity": 1,
+	"fillOpacity": 0.4
+},
+
+
+onEachFeature: function(feature, featureLayer) {
+featureLayer.bindPopup(feature.properties.names);
+}
+}).setZIndex(4).addTo(map).bringToBack();
+});
+
+$.getJSON("data/smallroads.geojson",function(smallroad){
+// add GeoJSON layer to the map once the file is loaded
+var datalayer = L.geoJson(smallroad ,{
+
+style: {
+	"zIndexOffset": 10,
+    "color": "black",
+    "weight": 1,
+    "opacity": 1,
+	"fillOpacity": 0.2
+},
+
+
+onEachFeature: function(feature, featureLayer) {
+featureLayer.bindPopup(feature.properties.names);
+}
+}).setZIndex(10).addTo(map).bringToBack();
+});
+
+$.getJSON("data/crystalbay.geojson",function(bay){
+// add GeoJSON layer to the map once the file is loaded
+var datalayer = L.geoJson(bay ,{
+
+style: {
+	"zIndexOffset": 3,
+    "color": "red",
+    "weight": 0.5,
+    "opacity": 0.5,
+	"fillOpacity": 0.5
+},
+
+
+onEachFeature: function(feature, featureLayer) {
+featureLayer.bindPopup(feature.properties.names);
+}
+}).setZIndex(4).addTo(map).bringToBack();
+});
+
+
+
+
+var overlays = {
+		
+		"Earth": earth,
+		"Street": street,
+
+	};
+
+
+L.control.layers( overlays,null,
+	
+	{
+		
+		collapsed: false,
+		autoZIndex: false
+	}).addTo(map);
+map.zoomControl.setPosition('bottomright');
+document.getElementsByClassName( 'leaflet-control-attribution' )[0].style.display = 'none';
+
+</script>
+</body>
+</html>
